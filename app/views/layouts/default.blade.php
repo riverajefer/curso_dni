@@ -28,23 +28,23 @@
 <!--********** HEADER ***************-->
 @include('includes.header')
 <!--********** FIN HEADER ***************-->
+<div class="row">
+	<div class="col-md-4 col-md-offset-4">
+		<!--********** MENSAJES DE ERRORES ***************-->
+		@if(Session::has('message_error'))
+			<div class="alert alert-danger" role="alert">
+			  {{ Session::get('message_error')}}
+			</div>
+		@endif
 
-<!--********** MENSAJES DE ERRORES ***************-->
-@if(Session::has('message_error'))
-	<div class="alert alert-dismissable">
-	  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-	  {{ Session::get('message')}}
+		<!--********** MENSAJES SUCCESS ***************-->
+		@if(Session::has('message_success'))
+		<div class="alert alert-info" role="alert">
+			  {{ Session::get('message')}}
+			</div>
+		@endif
 	</div>
-@endif
-
-<!--********** MENSAJES SUCCESS ***************-->
-@if(Session::has('message_success'))
-	<div class="alert alert-dismissable">
-	  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-	  {{ Session::get('message')}}
-	</div>
-@endif
-
+</div>
 
 <!--********** CONTENIDO ***************-->
 @yield('content') 

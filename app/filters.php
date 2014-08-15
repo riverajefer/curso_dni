@@ -32,6 +32,7 @@ App::after(function($request, $response)
 | integrates HTTP Basic authentication for quick, simple checking.
 |
 */
+/*
 
 Route::filter('auth', function()
 {
@@ -47,6 +48,8 @@ Route::filter('auth', function()
 		}
 	}
 });
+
+*/
 
 
 Route::filter('auth.basic', function()
@@ -88,3 +91,66 @@ Route::filter('csrf', function()
 		throw new Illuminate\Session\TokenMismatchException;
 	}
 });
+
+
+/************* Filtro de Autentificación ***************/
+Route::filter('auth', function()
+{
+	if (!Sentry::check())
+	{
+		return Redirect::to('login')->with('message_error', 'Debes estar Autentificado');
+	}
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| Filtros Rojo
+|--------------------------------------------------------------------------
+*/
+/*
+
+/************* Filtro Estado *********************/
+Route::filter('acumula_rojo', function()
+{
+	$pagina   =  Route::input('id');
+	$id_user  =  Sentry::getUser()->id;
+	$consulta =  RojoPaginas::whereUser_id($id_user)->get();
+	
+	if($consulta=='[]')
+	{
+		$user = new RojoPaginas;
+		$user->user_id = $id_user;
+		$user->pagina_actual = $pagina;
+		$user->terminado = false;
+		$user->save();
+	}
+	else
+	{
+		$page_bd = User::find($id_user)->RojoPaginas->pagina_actual;
+		$page_siguiente = $page_bd+1;
+
+		if($pagina > $page_siguiente)
+		{
+		  return Redirect::to('rojo/pagina/'.$page_bd)->with('message_error', 'Uy!!! No puedes acanzar tan rápido.');
+		}		
+		$RP =  RojoPaginas::whereUser_id($id_user)->update(array('pagina_actual' => $pagina));
+	}
+
+});
+
+/************* Filtro Acumula *********************/
+Route::filter('terminado_rojo', function()
+{
+	$page_actual = Route::input('id');
+	$id_user     = Sentry::getUser()->id;
+	$terminado   = User::find($id_user)->RojoPaginas->terminado;
+
+	if($terminado==1)
+	{
+		return "<h2>Viejo, usted ya presenta la prueba de este modulo, entonces no puede volver a ver las diapositivas</h2>";
+	}
+
+});
+
+
