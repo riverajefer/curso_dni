@@ -82,27 +82,31 @@ class LoginController extends \BaseController {
 	$consultaA =  AmarilloPaginas::whereUser_id($id_user)->get();
 	$consultaV =  VerdePaginas::whereUser_id($id_user)->get();
 
-	if($consultaR!='[]')
+
+	if($consultaR!='[]' AND  $consultaR[0]->terminado=='0')
 	{
 		// redirect donde quede rojo
 		$pagina = User::find($id_user)->RojoPaginas->pagina_actual;
 		return Redirect::to('rojo/pagina/'.$pagina);
 	}
-	elseif($consultaA!='[]')
+	elseif($consultaA!='[]' AND  $consultaA[0]->terminado=='0' )
 	{
 		// redirect donde quede Amarillo
 		$pagina = User::find($id_user)->AmarilloPaginas->pagina_actual;
 		return Redirect::to('amarillo/pagina/'.$pagina);
 	}
 
-	elseif($consultaV=='[]')
+	elseif($consultaV!='[]'  AND  $consultaV[0]->terminado=='0' )
 	{
+
 		// redirect donde quede Verde
 		$pagina = User::find($id_user)->VerdePaginas->pagina_actual;
 		return Redirect::to('verde/pagina/'.$pagina);
 	}
 	else{
 		// Quedó en el Home;
+		//return "Hola Verde";
+		return Redirect::to('/');
 	}
 
 

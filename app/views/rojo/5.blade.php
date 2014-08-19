@@ -1,6 +1,17 @@
 @extends('layouts/default')
 @section('content')
-Estado: {{$estado}}
+
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+  if (window.history && window.history.pushState) {
+    window.history.pushState('forward', null, '');
+    $(window).on('popstate', function() {
+      	location.reload();
+    });
+  }
+});    
+</script>
+
 <div class="row">
 	<div class="col-md-6 col-md-offset-3">
 		<h1 class="text-danger">Página 5</h1>
@@ -11,7 +22,7 @@ Estado: {{$estado}}
 
 		<ul class="pager">
 		    <li class="previous"><a href="{{URL::to('rojo/pagina/'.$anterior)}}" >&larr; Anterior</a></li>
-			<li class="next"><a href="{{URL::to('rojo/prueba/')}}" >Empezar Prueba &rarr;</a></li>
+			<li class="next"><a href="{{URL::to('rojo/termina_paginas/')}}" >Empezar Prueba &rarr;</a></li>
 		</ul>
 	</div>
 </div>

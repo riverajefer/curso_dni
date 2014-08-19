@@ -7,5 +7,5 @@
 
 <!-- Inclue CSS  -->
 {{ HTML::style('css/bootstrap.min.css') }}
-{{ HTML::style('css/bootstrap-responsive.min.css') }}
 {{ HTML::style('css/main.css')}}
+

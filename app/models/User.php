@@ -44,4 +44,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     {
         return $this->hasOne('DondeEstoy');
     }
+
+    /************** Relacion muchos a muchos   ******************/ 
+    /************** Un usuario responde muchas preguntas ****************/ 
+    /************** Una preguntas es respondida por muchos usuarios ****************/ 
+    public function preguntas()
+    {
+        return $this->belongsToMany('Preguntas', 'user_pregunta', 'user_id', 'preguntas_id')->withPivot('respuesta');
+    }
+
+
 }

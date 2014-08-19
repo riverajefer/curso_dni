@@ -1,7 +1,6 @@
 @extends('layouts/default')
 @section('content')
 
-<h1>Hola Mundo</h1>
 <hr>
 
 @if(Sentry::check())
@@ -9,7 +8,7 @@
 @endif
 
 
-
+<a href="{{URL::to('menu')}}">MENÚ</a>
 
 @stop
 {{-- Titulo --}}

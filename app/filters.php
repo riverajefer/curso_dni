@@ -142,15 +142,143 @@ Route::filter('acumula_rojo', function()
 /************* Filtro Acumula *********************/
 Route::filter('terminado_rojo', function()
 {
-	$page_actual = Route::input('id');
 	$id_user     = Sentry::getUser()->id;
 	$terminado   = User::find($id_user)->RojoPaginas->terminado;
 
 	if($terminado==1)
 	{
-		return "<h2>Viejo, usted ya presenta la prueba de este modulo, entonces no puede volver a ver las diapositivas</h2>";
+		return Redirect::to('menu')->with('message_error', 'No puedes volver a ver las diapositivas');
 	}
 
 });
 
 
+/*
+|--------------------------------------------------------------------------
+| Filtros Amarillo
+|--------------------------------------------------------------------------
+*/
+/*
+
+/************* Filtro Estado *********************/
+Route::filter('acumula_amarillo', function()
+{
+	$pagina   =  Route::input('id');
+	$id_user  =  Sentry::getUser()->id;
+	$consulta =  AmarilloPaginas::whereUser_id($id_user)->get();
+	
+	if($consulta=='[]')
+	{
+		$user = new AmarilloPaginas;
+		$user->user_id = $id_user;
+		$user->pagina_actual = $pagina;
+		$user->terminado = false;
+		$user->save();
+	}
+	else
+	{
+		$page_bd = User::find($id_user)->AmarilloPaginas->pagina_actual;
+		$page_siguiente = $page_bd+1;
+
+		if($pagina > $page_siguiente)
+		{
+		  return Redirect::to('amarillo/pagina/'.$page_bd)->with('message_error', 'Uy!!! No puedes avanzar tan rápido.');
+		}		
+		$RP =  AmarilloPaginas::whereUser_id($id_user)->update(array('pagina_actual' => $pagina));
+	}
+
+});
+
+/************* Filtro Acumula *********************/
+Route::filter('terminado_amarillo', function()
+{
+	$id_user     = Sentry::getUser()->id;
+	$terminado   = User::find($id_user)->AmarilloPaginas->terminado;
+
+	if($terminado==1)
+	{
+		return Redirect::to('menu')->with('message_error', 'No puedes volver a ver las diapositivas');
+	}
+
+});
+
+
+/************* Si paso la prueba Rojo  *********************/
+Route::filter('paso_rojo', function()
+{
+	$id_user     = Sentry::getUser()->id;
+	$terminado   = User::find($id_user)->RojoPaginas->terminado;
+	$page_bd = User::find($id_user)->RojoPaginas->pagina_actual;
+
+	if($terminado==0)
+	{
+		return Redirect::to('rojo/pagina/'.$page_bd)->with('message_error', 'Uy!!! No puedes avanzar tan rápido.');
+	}
+
+});
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Filtros Verde
+|--------------------------------------------------------------------------
+*/
+/*
+
+/************* Filtro Estado *********************/
+Route::filter('acumula_verde', function()
+{
+	$pagina   =  Route::input('id');
+	$id_user  =  Sentry::getUser()->id;
+	$consulta =  VerdePaginas::whereUser_id($id_user)->get();
+	
+	if($consulta=='[]')
+	{
+		$user = new VerdePaginas;
+		$user->user_id = $id_user;
+		$user->pagina_actual = $pagina;
+		$user->terminado = false;
+		$user->save();
+	}
+	else
+	{
+		$page_bd = User::find($id_user)->VerdePaginas->pagina_actual;
+		$page_siguiente = $page_bd+1;
+
+		if($pagina > $page_siguiente)
+		{
+		  return Redirect::to('verde/pagina/'.$page_bd)->with('message_error', 'Uy!!! No puedes avanzar tan rápido verde.');
+		}		
+		$RP =  VerdePaginas::whereUser_id($id_user)->update(array('pagina_actual' => $pagina));
+	}
+
+});
+
+/************* Filtro Acumula *********************/
+Route::filter('terminado_verde', function()
+{
+	$id_user     = Sentry::getUser()->id;
+	$terminado   = User::find($id_user)->VerdePaginas->terminado;
+
+	if($terminado==1)
+	{
+		return Redirect::to('menu')->with('message_error', 'No puedes volver a ver las diapositivas');
+	}
+
+});
+
+/************* Si paso la prueba Amarillo  *********************/
+Route::filter('paso_amarillo', function()
+{
+	$id_user     = Sentry::getUser()->id;
+	$terminado   = User::find($id_user)->AmarilloPaginas->terminado;
+	$page_bd = User::find($id_user)->AmarilloPaginas->pagina_actual;
+
+	if($terminado==0)
+	{
+		// la idea es que retoner a la prueba
+		return Redirect::to('amarillo/pagina/'.$page_bd)->with('message_error', 'Uy!!! No puedes avanzar tan rápido.');
+	}
+
+});
